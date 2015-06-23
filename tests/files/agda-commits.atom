@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:/agda/agda/commits/master</id>
+  <link type="text/html" rel="alternate" href="https://github.com/agda/agda/commits/master"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/agda/agda/commits/master.atom"/>
+  <title>Recent Commits to agda:master</title>
+  <updated>2015-06-13T07:43:29-05:00</updated>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/7aeff4cb610833bf8b4d9ea02416f680cb3b103f</id>
+    <link type="text/html" rel="alternate" href="https://github.com/agda/agda/commit/7aeff4cb610833bf8b4d9ea02416f680cb3b103f"/>
+    <title>
+        Merge agda-maint
+    </title>
+    <updated>2015-06-13T07:43:29-05:00</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars1.githubusercontent.com/u/635804?v=3&amp;s=30"/>
+    <author>
+      <name>asr</name>
+      <uri>https://github.com/asr</uri>
+    </author>
+    <content type="html">
+      &lt;pre style='white-space:pre-wrap;width:81ex'>Merge agda-maint&lt;/pre>
+    </content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Grit::Commit/c1f3d15930cfdba193e52280227cbef86049c397</id>
+    <link type="text/html" rel="alternate" href="https://github.com/agda/agda/commit/c1f3d15930cfdba193e52280227cbef86049c397"/>
+    <title>
+        [ Issue 1460 ] Removed multiple LANGUAGE pragmas (TypeChecking/Substitute.hs).
+    </title>
+    <updated>2015-06-13T07:42:35-05:00</updated>
+    <media:thumbnail height="30" width="30" url="https://avatars1.githubusercontent.com/u/635804?v=3&amp;s=30"/>
+    <author>
+      <name>asr</name>
+      <uri>https://github.com/asr</uri>
+    </author>
+    <content type="html">
+      &lt;pre style='white-space:pre-wrap;width:81ex'>[ Issue 1460 ] Removed multiple LANGUAGE pragmas (TypeChecking/Substitute.hs).
+
+See error in https://travis-ci.org/agda/agda/jobs/66654433.&lt;/pre>
+    </content>
+  </entry>
+</feed>

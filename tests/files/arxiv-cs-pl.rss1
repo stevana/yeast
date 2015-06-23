@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://arxiv.org/">
+<title>cs.PL updates on arXiv.org</title>
+<link>http://arxiv.org/</link>
+<description rdf:parseType="Literal">Computer Science -- Programming Languages (cs.PL) updates on the arXiv.org e-print archive</description>
+<dc:language>en-us</dc:language>
+<dc:date>2015-06-11T20:30:00-05:00</dc:date>
+<dc:publisher>help@arxiv.org</dc:publisher>
+<dc:subject>Computer Science -- Programming Languages</dc:subject>
+<syn:updateBase>1901-01-01T00:00+00:00</syn:updateBase>
+<syn:updateFrequency>1</syn:updateFrequency>
+<syn:updatePeriod>daily</syn:updatePeriod>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://arxiv.org/abs/1502.02921" />
+  <rdf:li rdf:resource="http://arxiv.org/abs/1503.01398" />
+ </rdf:Seq>
+</items>
+<image rdf:resource="http://arxiv.org/icons/sfx.gif" />
+</channel>
+<image rdf:about="http://arxiv.org/icons/sfx.gif">
+<title>arXiv.org</title>
+<url>http://arxiv.org/icons/sfx.gif</url>
+<link>http://arxiv.org/</link>
+</image>
+<item rdf:about="http://arxiv.org/abs/1502.02921">
+<title>OMP2MPI: Automatic MPI code generation from OpenMP programs. (arXiv:1502.02921v2 [cs.DC] UPDATED)</title>
+<link>http://arxiv.org/abs/1502.02921</link>
+<description rdf:parseType="Literal">&lt;p&gt;In this paper, we present OMP2MPI a tool that generates automatically MPI
+source code from OpenMP. With this transformation the original program can be
+adapted to be able to exploit a larger number of processors by surpassing the
+limits of the node level on large HPC clusters. The transformation can also be
+useful to adapt the source code to execute in distributed memory many-cores
+with message passing support. In addition, the resulting MPI code can be used
+as an starting point that still can be further optimized by software engineers.
+The transformation process is focused on detecting OpenMP parallel loops and
+distributing them in a master/worker pattern. A set of micro-benchmarks have
+been used to verify the correctness of the the transformation and to measure
+the resulting performance. Surprisingly not only the automatically generated
+code is correct by construction, but also it often performs faster even when
+executed with MPI.
+&lt;/p&gt;
+</description>
+<dc:creator> &lt;a href=&quot;http://arxiv.org/find/cs/1/au:+Saa_Garriga_A/0/1/0/all/0/1&quot;&gt;Albert Saa-Garriga&lt;/a&gt;, &lt;a href=&quot;http://arxiv.org/find/cs/1/au:+Castells_Rufas_D/0/1/0/all/0/1&quot;&gt;David Castells-Rufas&lt;/a&gt;, &lt;a href=&quot;http://arxiv.org/find/cs/1/au:+Carrabina_J/0/1/0/all/0/1&quot;&gt;Jordi Carrabina&lt;/a&gt;</dc:creator>
+</item>
+<item rdf:about="http://arxiv.org/abs/1503.01398">
+<title>Node.DPWS: High performance and scalable Web Services for the IoT. (arXiv:1503.01398v2 [cs.NI] UPDATED)</title>
+<link>http://arxiv.org/abs/1503.01398</link>
+<description rdf:parseType="Literal">&lt;p&gt;Interconnected computing systems, in various forms, are expected to permeate
+our lives, realizing the vision of the Internet of Things (IoT) and allowing us
+to enjoy novel, enhanced services that promise to improve our everyday lives.
+Nevertheless, this new reality also introduces significant challenges in terms
+of performance, scaling, usability and interoperability. Leveraging the
+benefits of Service Oriented Architectures (SOAs) can help alleviate many of
+the issues that developers, implementers and end-users have to face in the
+context of the IoT. This work presents Node.DPWS, a novel implementation of the
+Devices Profile for Web Services (DPWS) based on the Node.js platform.
+Node.DPWS can be used to deploy lightweight, efficient and scalable Web
+Services over heterogeneous nodes, including devices with limited resources.
+The performance of the presented work is evaluated on typical embedded devices,
+including comparisons with implementations created using alternative DPWS
+toolkits.
+&lt;/p&gt;
+</description>
+<dc:creator> &lt;a href=&quot;http://arxiv.org/find/cs/1/au:+Fysarakis_K/0/1/0/all/0/1&quot;&gt;Konstantinos Fysarakis&lt;/a&gt; (1), &lt;a href=&quot;http://arxiv.org/find/cs/1/au:+Mylonakis_D/0/1/0/all/0/1&quot;&gt;Damianos Mylonakis&lt;/a&gt; (2), &lt;a href=&quot;http://arxiv.org/find/cs/1/au:+Manifavas_C/0/1/0/all/0/1&quot;&gt;Charalampos Manifavas&lt;/a&gt; (3), &lt;a href=&quot;http://arxiv.org/find/cs/1/au:+Papaefstathiou_I/0/1/0/all/0/1&quot;&gt;Ioannis Papaefstathiou&lt;/a&gt; (1) ((1) Dept. of Electronic &amp;amp; Computer Engineering, Technical University of Crete, Greece, (2) Dept. of Computer Science, University of Crete, Greece, (3) Dept. of Informatics Engineering, Technological Educational Institute of Crete, Greece)</dc:creator>
+</item>
+</rdf:RDF>

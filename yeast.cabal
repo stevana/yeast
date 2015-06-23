@@ -1,0 +1,97 @@
+name:                yeast
+version:             0.0.0
+synopsis:            A library for working with feeds.
+description:         A library for fetching, parsing, and rendering
+                     different kinds of feeds -- RSS1, RSS2, and Atom.
+homepage:            https://github.com/stevana/yeast
+bug-reports:         https://github.com/stevana/yeast/issues
+license:             ISC
+license-file:        LICENSE
+author:              Stevan Andjelkovic
+maintainer:          Stevan Andjelkovic
+category:            Text
+build-type:          Simple
+cabal-version:       >=1.10
+tested-with:         GHC == 7.8.4, GHC == 7.10.1
+
+source-repository head
+  type:     git
+  location: git://github.com/stevana/yeast.git
+
+library
+  hs-source-dirs:      src
+  ghc-options:         -Wall
+  default-language:    Haskell2010
+  other-extensions:
+      CPP
+    , DataKinds
+    , DeriveFoldable
+    , DeriveFunctor
+    , DeriveGeneric
+    , DeriveTraversable
+    , FlexibleInstances
+    , FunctionalDependencies
+    , MultiParamTypeClasses
+    , OverloadedStrings
+    , ScopedTypeVariables
+    , StandaloneDeriving
+    , TemplateHaskell
+    , TypeOperators
+    , TypeSynonymInstances
+
+  exposed-modules:
+      Yeast.Feed
+    , Yeast.Fetch
+    , Yeast.Parse
+    , Yeast.Render
+    , Yeast.Serve
+
+  build-depends:
+      base >=4 && <5
+    , base64-bytestring
+    , bytestring
+    , cereal
+    , containers
+    , deepseq
+    , either
+    , hashable
+    , http-client
+    , http-client-tls
+    , lens
+    , mtl
+    , parallel-io
+    , QuickCheck
+    , servant
+    , servant-client
+    , servant-server
+    , text
+    , time
+    , wai
+    , warp
+    , wreq
+    , xml-conduit
+    , xml-lens
+
+test-suite test
+  hs-source-dirs:   tests
+  main-is:          Tests.hs
+  ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
+  type:             exitcode-stdio-1.0
+  default-language: Haskell2010
+  other-extensions:
+    OverloadedStrings
+  build-depends:
+      base >=4 && <5
+    , cereal
+    , either
+    , feed
+    , lens
+    , QuickCheck
+    , servant-client
+    , servant-server
+    , tasty >=0.10 && <0.12
+    , tasty-hunit
+    , tasty-quickcheck
+    , text
+    , xml
+    , yeast
