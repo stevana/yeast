@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Yeast.Parse
@@ -8,6 +9,9 @@ module Yeast.Parse
   )
   where
 
+#if __GLASGOW_HASKELL__ < 710
+import           Control.Applicative     ((<$>))
+#endif
 import           Control.Applicative     ((<|>))
 import           Control.DeepSeq         (deepseq)
 import           Control.Exception       (SomeException)

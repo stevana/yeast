@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                 #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Yeast.Fetch
@@ -8,6 +9,9 @@ module Yeast.Fetch
   )
   where
 
+#if __GLASGOW_HASKELL__ < 710
+import           Control.Applicative           ((<$>))
+#endif
 import           Control.Concurrent.ParallelIO (parallel)
 import           Control.Exception             (Handler(..), SomeException,
                                                 catches)

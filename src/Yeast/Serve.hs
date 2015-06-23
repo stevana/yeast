@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP               #-}
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
@@ -20,6 +21,9 @@ module Yeast.Serve
   )
   where
 
+#if __GLASGOW_HASKELL__ < 710
+import           Control.Applicative        ((<$>))
+#endif
 import           Control.Concurrent         (forkIO, killThread,
                                              threadDelay)
 import           Control.Exception          (bracket)

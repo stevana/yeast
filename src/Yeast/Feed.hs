@@ -38,9 +38,6 @@ module Yeast.Feed
 import           Control.Lens             (makeFields)
 import qualified Data.ByteString.Base64   as Base64
 import           Data.Char                (isSpace)
-#if __GLASGOW_HASKELL__ < 710
-import           Data.Foldable            (Foldable)
-#endif
 import           Data.Serialize           (Serialize, get, put, encode,
                                            decode)
 import           Data.Text                (Text)
@@ -51,6 +48,13 @@ import           Servant                  (ToText, toText, FromText,
                                            fromText)
 import           Test.QuickCheck          (Arbitrary, Gen, arbitrary,
                                            shrink, elements, frequency)
+
+#if __GLASGOW_HASKELL__ < 710
+import           Control.Applicative      ((<$>), (<*>), pure)
+import           Data.Foldable            (Foldable)
+import           Data.Monoid              (mempty)
+import           Data.Traversable         (Traversable)
+#endif
 
 ------------------------------------------------------------------------
 -- * Types

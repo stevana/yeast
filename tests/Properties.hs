@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 module Properties
   (properties)
   where
@@ -5,6 +7,9 @@ module Properties
 import           Control.Lens               ((^.), (.~), (?~), (%~), (&),
                                              mapped, to)
 import           Control.Monad.Trans.Either (runEitherT)
+#if __GLASGOW_HASKELL__ < 710
+import           Data.Traversable           (traverse)
+#endif
 import           Test.Tasty.QuickCheck      (Property, testProperty)
 import           Data.Serialize             (encode, decode)
 import qualified Data.Text                  as T
