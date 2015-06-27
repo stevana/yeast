@@ -14,24 +14,76 @@
 -- Arbitrary (Maybe Text).
 {-# OPTIONS_GHC -fno-warn-orphans   #-}
 
+{-# OPTIONS_HADDOCK show-extensions #-}
+
+------------------------------------------------------------------------
+-- |
+-- Module      :  Yeast.Feed
+-- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- License     :  ISC (see the file LICENSE)
+-- Maintainer  :  Stevan Andjelkovic
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- This module contains the datatype capturing the notion of a feed,
+-- together with its constructors and lenses.
+--
+-- RSS1, RSS2 and Atom feeds will all be parsed into the feed datatype,
+-- so that they can be manipulated in a uniform way.
+--
 ------------------------------------------------------------------------
 
-module Yeast.Feed
-  ( Feed
+module Yeast.Feed (
+
+  -- * Types
+  -- $types
+    Feed
   , FeedF(..)
   , FeedKind(..)
   , Item(..)
+
+  -- * Constructors
+  -- $constructors
   , emptyFeed
   , emptyItem
+
+  -- * Lenses
+  -- $lenses
+
+  -- ** Feed lenses
+
   , kind
+  -- | A lens for the kind of a feed.
+
   , title
+  -- | A lens for the title, this one is overloaded to work for both
+  -- feeds and items (since both have a title).
+
   , feedHome
+  -- | A lens for the URL of the feed.
+
   , feedHtml
+  -- | A lens for the HTML version of the feed.
+
   , description
+  -- | A lens for the description of a feed or item.
+
   , date
+  -- | A lens for the date of a feed or item.
+
   , items
+  -- | A lens for the items of a feed.
+
+  -- ** Item lenses
+  -- __Note:__ that some of the already exported feed lenses
+  -- are overloaded to work with items as well, e.g. 'title',
+  -- 'description', and 'date'.
+
   , link
+  -- | A lens for the link of an item.
+
   , author
+  -- | A lens for the author of an item.
   )
   where
 
@@ -57,17 +109,19 @@ import           Data.Traversable         (Traversable)
 #endif
 
 ------------------------------------------------------------------------
--- * Types
+-- $types
+-- Datatypes for feeds and their items.
 
+-- | The feed datatype.
 type Feed = FeedF [Item]
 
+-- | The feed datatype parametrised by some notion of feed items.
 data FeedF items = Feed
   { _feedFKind        :: !FeedKind
   , _feedFTitle       :: !(Maybe Text)
 
-  -- XXX: Network.URI?
+  -- XXX: Use Network.URI?
   -- https://stackoverflow.com/questions/30361822/how-to-denote-a-static-haskell-uri-in-code-with-network-uri
-
   , _feedFFeedHome    :: !(Maybe Text)  -- ^ URL to the feed itself.
   , _feedFFeedHtml    :: !(Maybe Text)  -- ^ URL to the HTML version of
                                         --   the feed.
@@ -77,9 +131,11 @@ data FeedF items = Feed
   }
   deriving (Eq, Show, Functor, Foldable, Traversable, Generic)
 
+-- | The feed kind datatype.
 data FeedKind = AtomKind | RSS1Kind | RSS2Kind
   deriving (Bounded, Generic, Enum, Eq, Show)
 
+-- | The item datatype, represents an item entry in the feed.
 data Item = Item
   { _itemTitle       :: !(Maybe Text)
   , _itemLink        :: !(Maybe Text)
@@ -90,13 +146,54 @@ data Item = Item
   deriving (Eq, Show, Ord, Generic)
 
 ------------------------------------------------------------------------
--- * Constructors and lenses
+-- $constructors
+-- Constructors for feeds and their items.
 
+-- | We can construct an empty feed of a certain kind as follows.
+--
+-- >>> emptyFeed RSS1Kind
+-- Feed { _feedFKind        = RSS1Kind
+--      , _feedFTitle       = Nothing
+--      , _feedFFeedHome    = Nothing
+--      , _feedFFeedHtml    = Nothing
+--      , _feedFDescription = Nothing
+--      , _feedFDate        = Nothing
+--      , _feedFItems       = []
+--      }
+--
+-- Using the lenses which we shall derive in the next section we can set
+-- and view the different fields of the feed, e.g.:
+--
+-- >>> emptyFeed RSS1Kind
+--       & title ?~ "apa"
+--       & items .~ [ emptyItem & title ?~ "bepa" ]
+-- Feed { _feedFKind        = RSS1Kind
+--      , _feedFTitle       = Just "apa"
+--      , _feedFFeedHome    = Nothing
+--      , _feedFFeedHtml    = Nothing
+--      , _feedFDescription = Nothing
+--      , _feedFDate        = Nothing
+--      , _feedFItems       =
+--          [ Item (Just "bepa") Nothing Nothing Nothing Nothing ]
+--      }
 emptyFeed :: FeedKind -> Feed
-emptyFeed k = Feed k mempty mempty mempty mempty mempty mempty
+emptyFeed k = emptyFeedF k
 
+-- | Empty item parametrised feed.
+emptyFeedF :: Monoid m => FeedKind -> FeedF m
+emptyFeedF k = Feed k Nothing Nothing Nothing Nothing Nothing mempty
+
+-- | Empty item.
 emptyItem :: Item
 emptyItem = Item Nothing Nothing Nothing Nothing Nothing
+
+------------------------------------------------------------------------
+-- $lenses
+-- Lenses for feeds and items.
+--
+-- __Note:__ These are derived using 'makeFields' from
+-- "Control.Lens.TH", which drops the @_datatypeName@ prefix of the
+-- fields and allows us to overload the lenses.
 
 makeFields ''FeedF
 makeFields ''Item
