@@ -104,7 +104,7 @@ import           Test.QuickCheck          (Arbitrary, Gen, arbitrary,
 #if __GLASGOW_HASKELL__ < 710
 import           Control.Applicative      ((<$>), (<*>), pure)
 import           Data.Foldable            (Foldable)
-import           Data.Monoid              (mempty)
+import           Data.Monoid              (Monoid, mempty)
 import           Data.Traversable         (Traversable)
 #endif
 
