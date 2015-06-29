@@ -10,8 +10,8 @@
 {-# LANGUAGE TemplateHaskell        #-}
 {-# LANGUAGE TypeSynonymInstances   #-}
 
--- This module contains orphan instances for Serialize Text, and
--- Arbitrary (Maybe Text).
+-- This module contains orphan instances for Serialize Text,
+-- Arbitrary (Maybe Text), and Arbitrary (,,,,,).
 {-# OPTIONS_GHC -fno-warn-orphans   #-}
 
 {-# OPTIONS_HADDOCK show-extensions #-}
@@ -229,13 +229,37 @@ instance Arbitrary (Maybe Text) where
   arbitrary = arbMText
   shrink    = shrinkMText
 
--- XXX: Shrink the items as well.
 instance Arbitrary a => Arbitrary (FeedF a) where
-  arbitrary = Feed <$> arbitrary <*> arbMText <*> pure Nothing <*> arbMText
-                   <*> arbMText  <*> arbMText <*> arbitrary
+  arbitrary = do
+    k <- arbitrary
+    Feed <$> pure k
+         <*> arbMText
+         <*> case k of
+               -- Only Atom feeds have a feed home.
+               AtomKind -> arbMText
+               _        -> pure Nothing
+         <*> arbMText
+         <*> arbMText
+         <*> case k of
+               -- RSS2 feeds do not have a date.
+               RSS2Kind -> pure Nothing
+               _        -> arbMText
+         <*> arbitrary
+
   shrink (Feed k t ho ht de da is) =
-    [ Feed k t' ho' ht' de' da' is
-    | (t', ho', ht', de', da') <- shrink (t, ho, ht, de, da)
+    [ Feed k t' ho' ht' de' da' is'
+    | (t', ho', ht', de', da', is') <- shrink (t, ho, ht, de, da, is)
+    ]
+
+instance (Arbitrary a, Arbitrary b, Arbitrary c,
+          Arbitrary d, Arbitrary e, Arbitrary f) =>
+            Arbitrary (a, b, c, d, e, f) where
+  arbitrary = (,,,,,) <$> arbitrary <*> arbitrary <*> arbitrary
+                      <*> arbitrary <*> arbitrary <*> arbitrary
+
+  shrink (u, v, w, x, y, z) =
+    [ (u', v', w', x', y', z')
+    | (u', (v', (w', (x', (y', z'))))) <- shrink (u, (v, (w, (x, (y, z)))))
     ]
 
 instance Arbitrary FeedKind where

@@ -143,8 +143,6 @@ prop_parseOldRender f0
 
 ------------------------------------------------------------------------
 
--- XXX: Use Test.Tasty.TH?
-
 properties :: TestTree
 properties = testGroup "Properties"
   [ testProperty "serialize"        prop_serialize

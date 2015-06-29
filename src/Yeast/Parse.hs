@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP                #-}
+{-# LANGUAGE CPP               #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Yeast.Parse
@@ -83,7 +83,7 @@ parseText txt = do
                       ell "description".text.to T.strip
         RSS2Kind -> doc^?root.entire.ell "channel"./
                       ell "description".text.to T.strip
-        AtomKind -> doc^?root.ell "feed".ell "subtitle".text.to T.strip
+        AtomKind -> doc^?root.entire.ell "subtitle".text.to T.strip
 
     & date        .~ case k of
         RSS1Kind -> doc^?root.entire./ell "date".text.to T.strip
