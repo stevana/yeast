@@ -6,16 +6,16 @@ ghc:
   - 7.4.2
 
 install:
-  - cabal update
+  - cabal install Cabal
   - cabal install cabal-install
   - cabal install --enable-tests --only-dependencies
 
 script:
-  - cabal configure --enable-tests
+  - cabal configure --enable-tests --ghc-option=-Werror -v2
   - cabal build
   - cabal install
   - cabal haddock
-  - cabal test --show-details=streaming
+  - cabal test --show-details=always
 
 matrix:
   fast_finish: true
