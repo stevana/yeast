@@ -4,9 +4,6 @@ module Properties
   (properties)
   where
 
-#if __GLASGOW_HASKELL__ < 710
-import           Data.Traversable           (traverse)
-#endif
 import           Test.Tasty.QuickCheck      (testProperty)
 import           Data.Serialize             (encode, decode)
 import           Servant                    (toText, fromText)
