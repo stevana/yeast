@@ -10,7 +10,7 @@ install:
   - cabal install --only-dependencies
 
 script:
-  - cabal configure
+  - cabal configure --enable-tests
   - cabal build
   - cabal install
   - cabal test
