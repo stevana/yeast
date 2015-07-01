@@ -83,11 +83,9 @@ test-suite test
   build-depends:
       base >=4 && <5
     , cereal
-    , either
     , feed
     , lens
     , QuickCheck
-    , servant-client
     , servant-server
     , tasty >=0.10 && <0.12
     , tasty-hunit

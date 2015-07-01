@@ -6,20 +6,17 @@ module Properties
 
 import           Control.Lens               ((^.), (.~), (?~), (%~), (&),
                                              mapped, to)
-import           Control.Monad.Trans.Either (runEitherT)
 #if __GLASGOW_HASKELL__ < 710
 import           Data.Traversable           (traverse)
 #endif
-import           Test.Tasty.QuickCheck      (Property, testProperty)
+import           Test.Tasty.QuickCheck      (testProperty)
 import           Data.Serialize             (encode, decode)
 import qualified Data.Text                  as T
 import           Data.Text.Lazy             (Text)
 import qualified Data.Text.Lazy             as L
 import           Data.Text.Lens             (unpacked)
 import           Servant                    (toText, fromText)
-import           Servant.Client             (showBaseUrl)
 import           Test.Tasty                 (TestTree, testGroup)
-import           Test.QuickCheck.Monadic    (monadicIO, run, assert)
 import qualified Text.Feed.Constructor      as Old
 import qualified Text.Feed.Export           as Old
 import qualified Text.Feed.Import           as Old
@@ -28,10 +25,8 @@ import qualified Text.Feed.Types            as Old
 import qualified Text.XML.Light.Output      as XML
 
 import           Yeast.Feed
-import           Yeast.Fetch
 import           Yeast.Parse
 import           Yeast.Render
-import           Yeast.Serve
 
 ------------------------------------------------------------------------
 -- * Properties
@@ -42,31 +37,12 @@ prop_serialize f = decode (encode f) == Right f
 prop_toFromText :: Feed -> Bool
 prop_toFromText f = fromText (toText f) == Just f
 
-prop_addFeed :: Feed -> Property
-prop_addFeed f = monadicIO $ do
-  run $ withServer [] $ do
-    ei <- runEitherT $ addFeed f
-    case ei of
-      Left err -> fail $ show err
-      Right _  -> return ()
-
 prop_parseRender :: Feed -> Bool
 prop_parseRender f
   = either (const False) ((==) f)
   . parseText
   . render (def { rsPretty = True })
   $ f
-
-prop_roundTrip :: Feed -> Property
-prop_roundTrip f = monadicIO $ do
-  ef' <- run $ withServer [] $ do
-    ei <- runEitherT $ addFeed f
-    case ei of
-      Left err -> fail  $ show err
-      Right i  -> fetch $ showBaseUrl baseUrl ++ "/feed/view/" ++ show i
-  case ef' of
-    Left  err -> fail $ show err
-    Right f'  -> assert $ f == f'
 
 -- | The output of our renderer can be parsed by the
 -- old feed library's parser.
@@ -147,9 +123,7 @@ properties :: TestTree
 properties = testGroup "Properties"
   [ testProperty "serialize"        prop_serialize
   , testProperty "{To,From}Text"    prop_toFromText
-  , testProperty "add feed"         prop_addFeed
   , testProperty "parseRender"      prop_parseRender
-  , testProperty "round trip"       prop_roundTrip
   , testProperty "old parse render" prop_oldParseRender
   , testProperty "parse old render" prop_parseOldRender
   ]
