@@ -2,7 +2,7 @@ name:                yeast
 version:             0.0.0
 synopsis:            A library for working with feeds.
 description:         A library for fetching, parsing, and rendering
-                     different kinds of feeds -- RSS1, RSS2, and Atom.
+                     different kinds of feeds (RSS1, RSS2, and Atom).
 homepage:            https://github.com/stevana/yeast
 bug-reports:         https://github.com/stevana/yeast/issues
 license:             ISC
