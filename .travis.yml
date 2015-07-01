@@ -6,7 +6,6 @@ ghc:
   - 7.4.2
 
 install:
-  - cabal install Cabal
   - cabal install cabal-install
   - cabal install --enable-tests --only-dependencies
 
