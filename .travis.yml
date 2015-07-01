@@ -6,6 +6,7 @@ ghc:
   - 7.4.2
 
 install:
+  - cabal update
   - cabal install cabal-install
   - cabal install --enable-tests --only-dependencies
 
@@ -13,7 +14,8 @@ script:
   - cabal configure --enable-tests
   - cabal build
   - cabal install
-  - cabal test
+  - cabal haddock
+  - cabal test --show-details=streaming
 
 matrix:
   fast_finish: true
