@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.org/stevana/yeast.svg?branch=master)](https://travis-ci.org/stevana/yeast)
 
-A Haskell library for working with different kinds of feeds (RSS1, RSS2,
-and Atom).
+A Haskell library for working with different kinds of news feeds (RSS1,
+RSS2, and Atom).
 
 Some more work is still needed before it can be put on Hackage:
 
