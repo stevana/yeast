@@ -1,32 +1,71 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Yeast.Render
-  ( render
+{-# OPTIONS_HADDOCK show-extensions #-}
+
+------------------------------------------------------------------------
+-- |
+-- Module      :  Yeast.Render
+-- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- License     :  ISC (see the file LICENSE)
+-- Maintainer  :  Stevan Andjelkovic
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- This module contains functions for rendering news feeds.
+--
+------------------------------------------------------------------------
+
+module Yeast.Render (
+  -- * Rendering
+  -- $rendering
+    renderFile
+  , renderLBS
+  , renderText
+
+  -- * Reexport
   , RenderSettings(..)
+  -- | Reexport 'RenderSettings' from "Text.XML".
   , def
+  -- | Reexport the default 'RenderSettings' from "Text.XML".
   )
   where
 
-import qualified Data.Map       as M
-import           Data.Maybe     (isJust)
-import           Data.Text      (Text)
-import qualified Data.Text.Lazy as L
-import           Text.XML       (Document(Document), Element(Element),
-                                 Name(Name), Node(NodeElement, NodeContent),
-                                 Prologue(Prologue), RenderSettings, def)
-import qualified Text.XML       as XML
-import           Text.XML.Lens  ((^.), (.~), (&), root, nodes, attrs,
-                                 _Element)
+import           Data.ByteString.Lazy    (ByteString)
+import qualified Data.ByteString.Lazy    as LBS
+import qualified Data.Map                as M
+import           Data.Maybe              (isJust)
+import           Data.Text               (Text)
+import qualified Data.Text.Lazy          as L
+import           Data.Text.Lazy.Encoding (encodeUtf8)
+import           Text.XML                (Document(Document),
+                                          Element(Element),
+                                          Name(Name), Node(NodeElement,
+                                          NodeContent), Prologue(Prologue),
+                                          RenderSettings, def)
+import qualified Text.XML                as XML
+import           Text.XML.Lens           ((^.), (.~), (&), root, nodes,
+                                          attrs, _Element)
 
 import           Yeast.Feed
 
 ------------------------------------------------------------------------
--- * Rendering
+-- $rendering
+-- Feeds can be rendered in different ways.
 
-render :: RenderSettings -> Feed -> L.Text
-render rs = XML.renderText rs . toXML
+-- | Render feed into a file.
+renderFile :: RenderSettings -> FilePath -> Feed -> IO ()
+renderFile rs fp = LBS.writeFile fp . renderLBS rs
+
+-- | Render feed into a (lazy) byte string.
+renderLBS :: RenderSettings -> Feed -> ByteString
+renderLBS rs = encodeUtf8 . renderText rs
+
+-- | Render a feed into (lazy) text.
+renderText :: RenderSettings -> Feed -> L.Text
+renderText rs = XML.renderText rs . toXML
 
 ------------------------------------------------------------------------
+-- Helpers
 
 emptyDocument :: FeedKind -> Document
 emptyDocument k = Document (Prologue [] Nothing []) rootEl []

@@ -26,7 +26,7 @@ prop_parseRender :: Feed -> Bool
 prop_parseRender f
   = either (const False) ((==) f)
   . parseText
-  . render (def { rsPretty = True })
+  . renderText (def { rsPretty = True })
   $ f
 
 -- XXX: Test renderer against external feed validator?
