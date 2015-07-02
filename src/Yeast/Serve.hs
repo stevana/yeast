@@ -3,6 +3,21 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
+{-# OPTIONS_HADDOCK show-extensions #-}
+
+------------------------------------------------------------------------
+-- |
+-- Module      :  Yeast.Serve
+-- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- License     :  ISC (see the file LICENSE)
+-- Maintainer  :  Stevan Andjelkovic
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- This module ...XXX
+--
+------------------------------------------------------------------------
+
 module Yeast.Serve
   ( API
   , ServeM
@@ -91,7 +106,7 @@ server
 
   feedView :: Int -> ServeM Text
   feedView i
-    = maybe "Feed not found." (render (def { rsPretty = True }))
+    = maybe "Feed not found." (renderText (def { rsPretty = True }))
     . M.lookup i <$> get
 
 api :: Proxy API

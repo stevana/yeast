@@ -1,11 +1,31 @@
 {-# LANGUAGE CPP               #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Yeast.Parse
-  ( ParseError(..)
-  , parseFile
+{-# OPTIONS_HADDOCK show-extensions #-}
+
+------------------------------------------------------------------------
+-- |
+-- Module      :  Yeast.Parse
+-- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- License     :  ISC (see the file LICENSE)
+-- Maintainer  :  Stevan Andjelkovic
+-- Stability   :  experimental
+-- Portability :  non-portable
+--
+-- This module contains functions for parsing news feeds.
+--
+------------------------------------------------------------------------
+
+module Yeast.Parse (
+  -- * Parsing
+  -- $ parsing
+    parseFile
   , parseLBS
   , parseText
+
+  -- * Parse errors
+  -- $errors
+  , ParseError(..)
   )
   where
 
@@ -31,19 +51,19 @@ import           Text.XML.Lens           (Document, Element,
 import           Yeast.Feed
 
 ------------------------------------------------------------------------
+-- $parsing
+-- Feeds can be parsed from different sources.
 
-data ParseError
-  = UnknownFeedKind
-  | XMLConduitError SomeException
-  deriving Show
-
+-- | Parse feed from file.
 parseFile :: FilePath -> IO (Either ParseError Feed)
 parseFile fp = parseLBS <$> LBS.readFile fp
 
+-- | Parse feed from (lazy) byte string.
 parseLBS :: ByteString -> Either ParseError Feed
 parseLBS bs =
   parseText $ either (const (decodeLatin1 bs)) id (decodeUtf8' bs)
 
+-- | Parse feed from (lazy) text.
 parseText :: Text -> Either ParseError Feed
 parseText txt = do
   doc <- bimap XMLConduitError id $ XML.parseText XML.def txt
@@ -120,3 +140,16 @@ parseText txt = do
           RSS2Kind -> e^?entire.el  "description".text.to T.strip
           AtomKind -> e^?entire.ell "summary".text.to T.strip <>
                       e^?entire.ell "content".text.to T.strip
+
+------------------------------------------------------------------------
+-- $errors
+-- Sometimes errors occur when we parse.
+
+-- | Datatype that captures all ways parsing can fail.
+data ParseError
+  = UnknownFeedKind
+      -- ^ The feed does not appear to be of RSS1, RSS2, nor Atom kind.
+  | XMLConduitError SomeException
+      -- ^ An error occured in the underlying parser, 'XML.parseText'
+      -- from "Text.XML".
+  deriving Show

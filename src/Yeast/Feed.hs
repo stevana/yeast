@@ -25,8 +25,8 @@
 -- Stability   :  experimental
 -- Portability :  non-portable
 --
--- This module contains the datatype capturing the notion of a feed,
--- together with its constructors and lenses.
+-- This module contains the datatype capturing the notion of a news
+-- feed, together with its constructors and lenses.
 --
 -- RSS1, RSS2 and Atom feeds will all be parsed into the feed datatype,
 -- so that they can be manipulated in a uniform way.
@@ -149,33 +149,7 @@ data Item = Item
 -- $constructors
 -- Constructors for feeds and their items.
 
--- | We can construct an empty feed of a certain kind as follows.
---
--- >>> emptyFeed RSS1Kind
--- Feed { _feedFKind        = RSS1Kind
---      , _feedFTitle       = Nothing
---      , _feedFFeedHome    = Nothing
---      , _feedFFeedHtml    = Nothing
---      , _feedFDescription = Nothing
---      , _feedFDate        = Nothing
---      , _feedFItems       = []
---      }
---
--- Using the lenses which we shall derive in the next section we can set
--- and view the different fields of the feed, e.g.:
---
--- >>> emptyFeed RSS1Kind
---       & title ?~ "apa"
---       & items .~ [ emptyItem & title ?~ "bepa" ]
--- Feed { _feedFKind        = RSS1Kind
---      , _feedFTitle       = Just "apa"
---      , _feedFFeedHome    = Nothing
---      , _feedFFeedHtml    = Nothing
---      , _feedFDescription = Nothing
---      , _feedFDate        = Nothing
---      , _feedFItems       =
---          [ Item (Just "bepa") Nothing Nothing Nothing Nothing ]
---      }
+-- | Empty feed.
 emptyFeed :: FeedKind -> Feed
 emptyFeed k = emptyFeedF k
 
@@ -193,7 +167,8 @@ emptyItem = Item Nothing Nothing Nothing Nothing Nothing
 --
 -- __Note:__ These are derived using 'makeFields' from
 -- "Control.Lens.TH", which drops the @_datatypeName@ prefix of the
--- fields and allows us to overload the lenses.
+-- fields and allows us to overload the lenses via the @HasFieldName@
+-- type classes.
 
 makeFields ''FeedF
 makeFields ''Item
