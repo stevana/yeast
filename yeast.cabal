@@ -1,5 +1,5 @@
 name:                yeast
-version:             0.0.0
+version:             0.1.0.0
 synopsis:            A library for working with news feeds.
 description:         A library for fetching, parsing, and rendering
                      different kinds of news feeds (RSS1, RSS2, and
