@@ -150,12 +150,8 @@ data Item = Item
 -- Constructors for feeds and their items.
 
 -- | Empty feed.
-emptyFeed :: FeedKind -> Feed
-emptyFeed k = emptyFeedF k
-
--- | Empty item parametrised feed.
-emptyFeedF :: Monoid m => FeedKind -> FeedF m
-emptyFeedF k = Feed k Nothing Nothing Nothing Nothing Nothing mempty
+emptyFeed :: Monoid m => FeedKind -> FeedF m
+emptyFeed k = Feed k Nothing Nothing Nothing Nothing Nothing mempty
 
 -- | Empty item.
 emptyItem :: Item
