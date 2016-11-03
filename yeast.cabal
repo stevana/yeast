@@ -87,7 +87,6 @@ test-suite test
     , cereal
     , lens
     , QuickCheck
-    , servant-server
     , tasty >=0.10 && <0.12
     , tasty-hunit
     , tasty-quickcheck
