@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP                    #-}
+{-# LANGUAGE DeriveAnyClass         #-}
 {-# LANGUAGE DeriveFoldable         #-}
 {-# LANGUAGE DeriveFunctor          #-}
 {-# LANGUAGE DeriveGeneric          #-}
@@ -19,7 +19,7 @@
 ------------------------------------------------------------------------
 -- |
 -- Module      :  Yeast.Feed
--- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- Copyright   :  (c) 2015-2016 Stevan Andjelkovic
 -- License     :  ISC (see the file LICENSE)
 -- Maintainer  :  Stevan Andjelkovic
 -- Stability   :  experimental
@@ -87,26 +87,17 @@ module Yeast.Feed (
   )
   where
 
-import           Control.Lens             (makeFields)
-import qualified Data.ByteString.Base64   as Base64
-import           Data.Char                (isSpace)
-import           Data.Serialize           (Serialize, get, put, encode,
-                                           decode)
-import           Data.Text                (Text)
-import qualified Data.Text                as T
-import           Data.Text.Encoding       (encodeUtf8, decodeUtf8)
-import           GHC.Generics             (Generic)
-import           Servant                  (ToText, toText, FromText,
-                                           fromText)
-import           Test.QuickCheck          (Arbitrary, Gen, arbitrary,
-                                           shrink, elements, frequency)
-
-#if __GLASGOW_HASKELL__ < 710
-import           Control.Applicative      ((<$>), (<*>), pure)
-import           Data.Foldable            (Foldable)
-import           Data.Monoid              (Monoid, mempty)
-import           Data.Traversable         (Traversable)
-#endif
+import           Control.Lens              (makeFields)
+import           Data.Char                 (isSpace)
+import           Data.Serialize            (Serialize, get, put)
+import           Data.Text                 (Text)
+import qualified Data.Text                 as T
+import           Data.Text.Encoding        (decodeUtf8, encodeUtf8)
+import           GHC.Generics              (Generic)
+import           Servant.API               (FromHttpApiData, ToHttpApiData)
+import           Test.QuickCheck           (Arbitrary, Gen, arbitrary, elements,
+                                            frequency, shrink)
+import           Test.QuickCheck.Instances ()
 
 ------------------------------------------------------------------------
 -- $types
@@ -129,11 +120,11 @@ data FeedF items = Feed
   , _feedFDate        :: !(Maybe Text)    -- XXX: UTCTime?
   , _feedFItems       :: !items
   }
-  deriving (Eq, Show, Functor, Foldable, Traversable, Generic)
+  deriving (Eq, Show, Functor, Foldable, Traversable, Generic, ToHttpApiData, FromHttpApiData)
 
 -- | The feed kind datatype.
 data FeedKind = AtomKind | RSS1Kind | RSS2Kind
-  deriving (Bounded, Generic, Enum, Eq, Show)
+  deriving (Bounded, Generic, Enum, Eq, Show, ToHttpApiData, FromHttpApiData)
 
 -- | The item datatype, represents an item entry in the feed.
 data Item = Item
@@ -143,7 +134,10 @@ data Item = Item
   , _itemAuthor      :: !(Maybe Text)
   , _itemDescription :: !(Maybe Text)
   }
-  deriving (Eq, Show, Ord, Generic)
+  deriving (Eq, Show, Ord, Generic, ToHttpApiData, FromHttpApiData)
+
+deriving instance ToHttpApiData   [Item]
+deriving instance FromHttpApiData [Item]
 
 ------------------------------------------------------------------------
 -- $constructors
@@ -191,15 +185,6 @@ arbMText = frequency
   , (10, Just . T.filter (not . isSpace) . T.pack <$> arbitrary)
   ]
 
-shrinkMText :: Maybe Text -> [Maybe Text]
-shrinkMText Nothing  = []
-shrinkMText (Just t) = [Nothing] ++
-  [Just (T.pack s) | s <- shrink (T.unpack t)]
-
-instance Arbitrary (Maybe Text) where
-  arbitrary = arbMText
-  shrink    = shrinkMText
-
 instance Arbitrary a => Arbitrary (FeedF a) where
   arbitrary = do
     k <- arbitrary
@@ -243,19 +228,3 @@ instance Arbitrary Item where
     [ Item t' l' da' a' de'
     | (t', l', da', a', de') <- shrink (t, l, da, a, de)
     ]
-
-instance ToText Feed where
-  toText = decodeUtf8 . Base64.encode . encode
-
-instance ToText Item where
-  toText = decodeUtf8 . Base64.encode . encode
-
-instance FromText Feed where
-  fromText
-    = either (const Nothing) Just
-    . decode . Base64.decodeLenient . encodeUtf8
-
-instance FromText Item where
-  fromText
-    = either (const Nothing) Just
-    . decode . Base64.decodeLenient . encodeUtf8

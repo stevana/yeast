@@ -13,7 +13,7 @@ maintainer:          Stevan Andjelkovic
 category:            Text
 build-type:          Simple
 cabal-version:       >=1.10
-tested-with:         GHC == 7.8.4, GHC == 7.10.1
+tested-with:         GHC == 8.0.1
 
 source-repository head
   type:     git
@@ -24,8 +24,8 @@ library
   ghc-options:         -Wall
   default-language:    Haskell2010
   other-extensions:
-      CPP
-    , DataKinds
+      DataKinds
+    , DeriveAnyClass
     , DeriveFoldable
     , DeriveFunctor
     , DeriveGeneric
@@ -62,6 +62,7 @@ library
     , mtl
     , parallel-io
     , QuickCheck
+    , quickcheck-instances
     , servant
     , servant-client
     , servant-server

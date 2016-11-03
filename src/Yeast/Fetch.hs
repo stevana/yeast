@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP                 #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 {-# OPTIONS_HADDOCK show-extensions #-}
@@ -6,7 +5,7 @@
 ------------------------------------------------------------------------
 -- |
 -- Module      :  Yeast.Fetch
--- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- Copyright   :  (c) 2015-2016 Stevan Andjelkovic
 -- License     :  ISC (see the file LICENSE)
 -- Maintainer  :  Stevan Andjelkovic
 -- Stability   :  experimental
@@ -29,9 +28,6 @@ module Yeast.Fetch (
   )
   where
 
-#if __GLASGOW_HASKELL__ < 710
-import           Control.Applicative           ((<$>))
-#endif
 import           Control.Concurrent.ParallelIO (parallel)
 import           Control.Exception             (Handler(..), SomeException,
                                                 catches)

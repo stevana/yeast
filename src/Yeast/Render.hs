@@ -5,7 +5,7 @@
 ------------------------------------------------------------------------
 -- |
 -- Module      :  Yeast.Render
--- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- Copyright   :  (c) 2015-2016 Stevan Andjelkovic
 -- License     :  ISC (see the file LICENSE)
 -- Maintainer  :  Stevan Andjelkovic
 -- Stability   :  experimental

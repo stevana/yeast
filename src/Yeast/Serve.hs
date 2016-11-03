@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP               #-}
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
@@ -8,7 +7,7 @@
 ------------------------------------------------------------------------
 -- |
 -- Module      :  Yeast.Serve
--- Copyright   :  (c) 2015 Stevan Andjelkovic
+-- Copyright   :  (c) 2015-2016 Stevan Andjelkovic
 -- License     :  ISC (see the file LICENSE)
 -- Maintainer  :  Stevan Andjelkovic
 -- Stability   :  experimental
@@ -36,31 +35,27 @@ module Yeast.Serve
   )
   where
 
-#if __GLASGOW_HASKELL__ < 710
-import           Control.Applicative        ((<$>))
-#endif
-import           Control.Concurrent         (forkIO, killThread,
-                                             threadDelay)
-import           Control.Exception          (bracket)
-import           Control.Lens               ((^.), (%~), (&), mapped)
-import           Control.Monad.State        (State, runState, get, modify,
-                                             liftIO)
-import           Control.Monad.Trans.Either (EitherT, runEitherT)
-import           Data.Hashable              (hash)
-import           Data.IORef                 (IORef, newIORef, readIORef,
-                                             writeIORef)
-import           Data.IntMap.Strict         (IntMap)
-import qualified Data.IntMap.Strict         as M
-import           Data.Text.Lazy             (Text)
-import qualified Data.Text.Lazy             as T
-import           Network.Wai.Handler.Warp   (run)
-import           Servant                    (ServerT, (:<|>)((:<|>)), Get,
-                                             Capture, PlainText, JSON, (:>),
-                                             Proxy(Proxy), ServantErr, (:~>)
-                                             (Nat), serve, enter)
-import           Servant.Client             (ServantError, BaseUrl(BaseUrl),
-                                             Scheme(Http), client,
-                                             showBaseUrl)
+import           Control.Concurrent       (forkIO, killThread, threadDelay)
+import           Control.Exception        (bracket)
+import           Control.Lens             (mapped, (%~), (&), (^.))
+import           Control.Monad.Except     (ExceptT, runExceptT)
+import           Control.Monad.State      (State, get, liftIO, modify, runState)
+import           Data.Hashable            (hash)
+import           Data.IntMap.Strict       (IntMap)
+import qualified Data.IntMap.Strict       as M
+import           Data.IORef               (IORef, newIORef, readIORef,
+                                           writeIORef)
+import           Data.Text.Lazy           (Text)
+import qualified Data.Text.Lazy           as T
+import           Network.HTTP.Client      (Manager, defaultManagerSettings,
+                                           newManager)
+import           Network.Wai.Handler.Warp (run)
+import           Servant                  ((:<|>) ((:<|>)), (:>), (:~>) (Nat),
+                                           Capture, Get, JSON, PlainText,
+                                           Proxy (Proxy), ServantErr, ServerT,
+                                           enter, serve)
+import           Servant.Client           (BaseUrl (BaseUrl), ClientM,
+                                           Scheme (Http), client, showBaseUrl)
 
 import           Yeast.Feed
 import           Yeast.Fetch
@@ -112,7 +107,7 @@ server
 api :: Proxy API
 api = Proxy
 
-transform :: IORef (IntMap Feed) -> ServeM :~> EitherT ServantErr IO
+transform :: IORef (IntMap Feed) -> ServeM :~> ExceptT ServantErr IO
 transform ref = Nat $ \m -> liftIO $ do
   s <- readIORef ref
   let (x, s') = runState m s
@@ -140,7 +135,8 @@ withServedFeed
   -> (Feed -> IO ())       -- ^ Success continuation.
   -> IO ()
 withServedFeed f e k = withServer [] $ do
-  ei <- runEitherT $ addFeed f
+  mgr <- newManager defaultManagerSettings
+  ei  <- runExceptT $ addFeed f mgr baseUrl
   case ei of
     Left err -> e $ show err
     Right i  -> do
@@ -164,10 +160,12 @@ withFileFeed fp e k = do
 -- * Client part
 
 baseUrl :: BaseUrl
-baseUrl = BaseUrl Http "localhost" 8081
+baseUrl = BaseUrl Http "localhost" 8081 "/"
 
-addFeed    :: Feed -> EitherT ServantError IO Int
-removeFeed :: Int  -> EitherT ServantError IO ()
-listFeed   ::         EitherT ServantError IO Text
-viewFeed   :: Int  -> EitherT ServantError IO Text
-addFeed :<|> removeFeed :<|> listFeed :<|> viewFeed = client api baseUrl
+type Client a = Manager -> BaseUrl -> ClientM a
+
+addFeed    :: Feed -> Client Int
+removeFeed :: Int  -> Client ()
+listFeed   ::         Client Text
+viewFeed   :: Int  -> Client Text
+addFeed :<|> removeFeed :<|> listFeed :<|> viewFeed = client api

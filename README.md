@@ -28,9 +28,6 @@ point:
 
   * Add more unit tests;
 
-  * Muck around with Cabal package constraints so that it builds on
-    older versions of GHC (or use Stackage instead?);
-
   * Integrate `stylish-haskell`, `hlint`, and perhaps other stylistic
     checks to the build;
 
